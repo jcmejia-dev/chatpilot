@@ -10,147 +10,58 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="app-shell">
-    <aside class="sidebar">
-      <div class="brand">
-        <div class="brand-mark">CP</div>
-        <div>
-          <div class="brand-name">ChatPilot</div>
-          <div class="brand-sub">Training Copilot</div>
-        </div>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-mark">CP</div><div><div class="brand-name">ChatPilot</div><div class="brand-sub">Training Copilot</div></div></div>
+    <nav class="nav">
+      <button class="nav-item active" data-view="inbox">Inbox <span id="navUnread" class="nav-badge">0</span></button>
+      <button class="nav-item" data-view="assistant">Quick Reply</button>
+      <button class="nav-item" data-view="practice">Practice Shift</button>
+      <button class="nav-item" data-view="analytics">Analytics</button>
+      <button class="nav-item" data-view="personas">Personas</button>
+      <button class="nav-item" data-view="settings">Settings</button>
+    </nav>
+    <div class="sidebar-footer"><div class="status-dot-wrap"><span class="status-dot"></span> Simulator online</div><small>Review every reply before using it</small></div>
+  </aside>
+  <main class="main">
+    <header class="topbar"><div><h1 id="viewTitle">Inbox</h1><p id="viewSubtitle">Manage simulated subscribers and review AI-assisted replies.</p></div><div class="topbar-actions"><button class="ghost" id="resetBtn">Reset</button><button class="primary" id="startShiftBtn">Start Practice Shift</button></div></header>
+
+    <section id="inboxView" class="view active-view"><div class="workspace-grid">
+      <section class="panel contacts-panel"><div class="panel-head"><div><h2>Subscribers</h2><span id="subscriberCount" class="muted"></span></div><select id="contactFilter" class="compact-select"><option value="all">All</option><option value="unread">Unread</option><option value="hot">Hot leads</option></select></div><div id="contactList" class="contact-list"></div></section>
+      <section class="panel conversation-panel"><div id="conversationHeader" class="conversation-header"></div><div id="messageList" class="message-list"></div><div class="composer"><textarea id="replyBox" rows="3" placeholder="Write or edit your reply..."></textarea><div class="composer-actions"><div class="helper-text">Human approval required before sending</div><button class="secondary" id="improveBtn">Improve draft</button><button class="primary" id="sendBtn">Send reply</button></div></div></section>
+      <aside class="panel copilot-panel"><div class="panel-head"><div><h2>AI Copilot</h2><span class="muted">Context-aware coaching</span></div></div><div id="copilotContent" class="copilot-content"></div></aside>
+    </div></section>
+
+    <section id="assistantView" class="view">
+      <div class="reply-assistant-grid">
+        <section class="panel quick-input-panel">
+          <div class="panel-head"><div><h2>Quick Reply Assistant</h2><span class="muted">Paste a message or recent conversation, then review the suggestions.</span></div></div>
+          <div class="quick-form">
+            <label>Subscriber personality <select id="quickPersona"><option value="auto">Auto / unknown</option><option value="price">Price-sensitive</option><option value="warm">Warm conversationalist</option><option value="direct">Direct buyer</option><option value="skeptical">Skeptical / needs reassurance</option><option value="complaint">Frustrated buyer</option><option value="quiet">Quiet / low-pressure</option></select></label>
+            <label>Reply tone <select id="quickTone"><option value="natural">Natural</option><option value="warm">Warm</option><option value="playful">Playful</option><option value="calm">Calm</option><option value="direct">Direct</option></select></label>
+            <label>Recent conversation / incoming message<textarea id="quickInput" rows="10" placeholder="Example:\nSubscriber: I was going to buy it, but $30 is a lot. Maybe tomorrow.\n\nYou can paste several recent messages for context."></textarea></label>
+            <div class="privacy-note"><strong>Privacy:</strong> pasted text stays in this browser in the current static version and is not saved by ChatPilot. Don't paste real subscriber/client data unless your employer permits external tools.</div>
+            <button class="primary wide" id="generateQuickBtn">Generate best replies</button>
+          </div>
+        </section>
+        <section class="panel quick-results-panel">
+          <div class="panel-head"><div><h2>Reply recommendations</h2><span class="muted">Analyze → choose → edit → copy</span></div><button class="ghost" id="clearQuickBtn">Clear</button></div>
+          <div id="quickEmpty" class="quick-empty"><strong>Paste a message to begin.</strong><span>ChatPilot will identify the likely intent, mood, strategy, and generate three response options.</span></div>
+          <div id="quickResults" class="quick-results hidden">
+            <div class="quick-analysis" id="quickAnalysis"></div>
+            <div id="quickOptions" class="quick-options"></div>
+            <div class="quick-editor"><label>Final reply<textarea id="quickFinal" rows="5" placeholder="Choose a suggestion or write your own..."></textarea></label><div class="quick-editor-actions"><button class="secondary" id="polishQuickBtn">Polish</button><button class="primary" id="copyQuickBtn">Copy reply</button></div><div id="quickQuality" class="quality-line"></div></div>
+          </div>
+        </section>
       </div>
-      <nav class="nav">
-        <button class="nav-item active" data-view="inbox">Inbox <span id="navUnread" class="nav-badge">0</span></button>
-        <button class="nav-item" data-view="practice">Practice Shift</button>
-        <button class="nav-item" data-view="analytics">Analytics</button>
-        <button class="nav-item" data-view="personas">Personas</button>
-        <button class="nav-item" data-view="settings">Settings</button>
-      </nav>
-      <div class="sidebar-footer">
-        <div class="status-dot-wrap"><span class="status-dot"></span> Simulator online</div>
-        <small>Local mock data only</small>
-      </div>
-    </aside>
+    </section>
 
-    <main class="main">
-      <header class="topbar">
-        <div>
-          <h1 id="viewTitle">Inbox</h1>
-          <p id="viewSubtitle">Manage simulated subscribers and review AI-assisted replies.</p>
-        </div>
-        <div class="topbar-actions">
-          <button class="ghost" id="resetBtn">Reset</button>
-          <button class="primary" id="startShiftBtn">Start Practice Shift</button>
-        </div>
-      </header>
+    <section id="practiceView" class="view"><div class="practice-layout"><div class="panel practice-card"><div class="panel-head"><h2>Practice Shift</h2><span id="shiftStatus" class="pill neutral">Not started</span></div><p class="muted">Simulate a busy inbox. New messages arrive over time and you choose what to answer first.</p><div class="metric-grid"><div class="metric"><span>Time left</span><strong id="shiftTimer">05:00</strong></div><div class="metric"><span>Handled</span><strong id="handledCount">0</strong></div><div class="metric"><span>Unread</span><strong id="practiceUnread">0</strong></div><div class="metric"><span>Score</span><strong id="liveScore">—</strong></div></div><div class="practice-actions"><button class="primary" id="beginPracticeBtn">Begin 5-minute drill</button><button class="ghost" id="endPracticeBtn">End shift</button></div></div><div class="panel training-guide"><h2>What you're practicing</h2><div class="guide-list"><div><strong>1. Prioritize</strong><span>Answer urgent complaints and hot buyers before casual chats.</span></div><div><strong>2. Match personality</strong><span>Different subscribers respond to different tones.</span></div><div><strong>3. Keep it natural</strong><span>Short, human replies usually outperform robotic scripts.</span></div><div><strong>4. Don't overpromise</strong><span>Never promise refunds, discounts, or outcomes you aren't authorized to give.</span></div></div></div></div></section>
 
-      <section id="inboxView" class="view active-view">
-        <div class="workspace-grid">
-          <section class="panel contacts-panel">
-            <div class="panel-head">
-              <div>
-                <h2>Subscribers</h2>
-                <span id="subscriberCount" class="muted"></span>
-              </div>
-              <select id="contactFilter" class="compact-select">
-                <option value="all">All</option>
-                <option value="unread">Unread</option>
-                <option value="hot">Hot leads</option>
-              </select>
-            </div>
-            <div id="contactList" class="contact-list"></div>
-          </section>
-
-          <section class="panel conversation-panel">
-            <div id="conversationHeader" class="conversation-header"></div>
-            <div id="messageList" class="message-list"></div>
-            <div class="composer">
-              <textarea id="replyBox" rows="3" placeholder="Write or edit your reply..."></textarea>
-              <div class="composer-actions">
-                <div class="helper-text">Human approval required before sending</div>
-                <button class="secondary" id="improveBtn">Improve draft</button>
-                <button class="primary" id="sendBtn">Send reply</button>
-              </div>
-            </div>
-          </section>
-
-          <aside class="panel copilot-panel">
-            <div class="panel-head">
-              <div>
-                <h2>AI Copilot</h2>
-                <span class="muted">Context-aware coaching</span>
-              </div>
-            </div>
-            <div id="copilotContent" class="copilot-content"></div>
-          </aside>
-        </div>
-      </section>
-
-      <section id="practiceView" class="view">
-        <div class="practice-layout">
-          <div class="panel practice-card">
-            <div class="panel-head"><h2>Practice Shift</h2><span id="shiftStatus" class="pill neutral">Not started</span></div>
-            <p class="muted">Simulate a busy inbox. New messages arrive over time and you choose what to answer first.</p>
-            <div class="metric-grid">
-              <div class="metric"><span>Time left</span><strong id="shiftTimer">05:00</strong></div>
-              <div class="metric"><span>Handled</span><strong id="handledCount">0</strong></div>
-              <div class="metric"><span>Unread</span><strong id="practiceUnread">0</strong></div>
-              <div class="metric"><span>Score</span><strong id="liveScore">—</strong></div>
-            </div>
-            <div class="practice-actions">
-              <button class="primary" id="beginPracticeBtn">Begin 5-minute drill</button>
-              <button class="ghost" id="endPracticeBtn">End shift</button>
-            </div>
-          </div>
-          <div class="panel training-guide">
-            <h2>What you're practicing</h2>
-            <div class="guide-list">
-              <div><strong>1. Prioritize</strong><span>Answer urgent complaints and hot buyers before casual chats.</span></div>
-              <div><strong>2. Match personality</strong><span>Different subscribers respond to different tones.</span></div>
-              <div><strong>3. Keep it natural</strong><span>Short, human replies usually outperform robotic scripts.</span></div>
-              <div><strong>4. Don't overpromise</strong><span>Never promise refunds, discounts, or outcomes you aren't authorized to give.</span></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="analyticsView" class="view">
-        <div class="analytics-grid">
-          <div class="panel metric-card"><span>Replies sent</span><strong id="statReplies">0</strong><small>Current browser session</small></div>
-          <div class="panel metric-card"><span>Avg. response score</span><strong id="statQuality">—</strong><small>Grammar + fit + strategy</small></div>
-          <div class="panel metric-card"><span>Opportunities spotted</span><strong id="statOpportunities">0</strong><small>Buying intent recognized</small></div>
-          <div class="panel metric-card"><span>Missed messages</span><strong id="statMissed">0</strong><small>During practice drills</small></div>
-        </div>
-        <div class="panel analytics-panel">
-          <h2>Skill breakdown</h2>
-          <div id="skillBars"></div>
-        </div>
-      </section>
-
-      <section id="personasView" class="view">
-        <div class="persona-grid" id="personaGrid"></div>
-      </section>
-
-      <section id="settingsView" class="view">
-        <div class="panel settings-panel">
-          <h2>Settings</h2>
-          <div class="setting-row">
-            <div><strong>Reply style</strong><span>Controls simulated AI draft tone.</span></div>
-            <select id="toneSelect"><option value="warm">Warm</option><option value="playful">Playful</option><option value="calm">Calm</option><option value="direct">Direct</option></select>
-          </div>
-          <div class="setting-row">
-            <div><strong>Auto-generate coaching</strong><span>Refresh strategy when a new message arrives.</span></div>
-            <input type="checkbox" id="autoCoach" checked />
-          </div>
-          <div class="setting-row">
-            <div><strong>Real subscriber data</strong><span>Disabled in this GitHub Pages build. Use mock data only unless your employer explicitly permits external AI tools.</span></div>
-            <span class="pill danger">Disabled</span>
-          </div>
-        </div>
-      </section>
-    </main>
-  </div>
-  <div id="toast" class="toast"></div>
-  <script src="app.js"></script>
-</body>
-</html>
+    <section id="analyticsView" class="view"><div class="analytics-grid"><div class="panel metric-card"><span>Replies sent</span><strong id="statReplies">0</strong><small>Current browser session</small></div><div class="panel metric-card"><span>Avg. response score</span><strong id="statQuality">—</strong><small>Grammar + fit + strategy</small></div><div class="panel metric-card"><span>Opportunities spotted</span><strong id="statOpportunities">0</strong><small>Buying intent recognized</small></div><div class="panel metric-card"><span>Missed messages</span><strong id="statMissed">0</strong><small>During practice drills</small></div></div><div class="panel analytics-panel"><h2>Skill breakdown</h2><div id="skillBars"></div></div></section>
+    <section id="personasView" class="view"><div class="persona-grid" id="personaGrid"></div></section>
+    <section id="settingsView" class="view"><div class="panel settings-panel"><h2>Settings</h2><div class="setting-row"><div><strong>Reply style</strong><span>Controls simulated draft tone.</span></div><select id="toneSelect"><option value="warm">Warm</option><option value="playful">Playful</option><option value="calm">Calm</option><option value="direct">Direct</option></select></div><div class="setting-row"><div><strong>Auto-generate coaching</strong><span>Refresh strategy when a new message arrives.</span></div><input type="checkbox" id="autoCoach" checked /></div><div class="setting-row"><div><strong>Automatic sending</strong><span>Disabled. ChatPilot always requires you to review and manually copy/send a response.</span></div><span class="pill danger">Disabled</span></div></div></section>
+  </main>
+</div>
+<div id="toast" class="toast"></div><script src="app.js"></script>
+</body></html>
